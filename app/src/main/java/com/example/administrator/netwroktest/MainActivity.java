@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendRequestWithHttpURLConnection();
+
             }
         });
 
@@ -115,30 +116,36 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 try {
-                    connection=(HttpURLConnection)url.openConnection();
+                    connection = (HttpURLConnection)url.openConnection();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);
                     connection.setReadTimeout(8000);
                     InputStream in =connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder response = new StringBuilder();
-                    String line;
-                    while((line = reader.readLine())!= null){
+                    String line ;
+                    while ((line = reader.readLine())!=null){
                         response.append(line);
                     }
                     Message message = new Message();
                     message.what = SHOW_RESPONSE;
                     message.obj = response.toString();
                     handler.sendMessage(message);
-                } catch (IOException e) {
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }finally {
                     if(connection != null){
                         connection.disconnect();
                     }
                 }
-
             }
         }).start();
     }
+
+
 }
